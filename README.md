@@ -1,0 +1,1 @@
+# tes-diagnostik-fungsi-kuadrat
