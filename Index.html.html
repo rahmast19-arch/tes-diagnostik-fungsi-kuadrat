@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tes Diagnostik Matematika - Fungsi Kuadrat</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--bg);
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .card {
+      display: none;
+    }
+
+    .card.active {
+      display: block;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background-color: var(--border);
+      border-radius: 3px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-text {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background-color: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.95rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover, .option-btn:focus {
+      border-color: var(--primary);
+      background-color: #f0fdf4;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .badge-a { background: #fee2e2; color: #991b1b; }
+    .badge-b { background: #fef3c7; color: #92400e; }
+    .badge-c { background: #dcfce7; color: #166534; }
+
+    .misconception-box {
+      background-color: #fff7ed;
+      border-left: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .practice-box {
+      background-color: var(--bg);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .practice-box p {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .practice-feedback {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .feedback-correct { color: var(--success); }
+    .feedback-wrong { color: var(--danger); }
+
+    .result-code-box {
+      background-color: #1e293b;
+      color: #38bdf8;
+      font-family: monospace;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 16px 0;
+      word-break: break-all;
+    }
+
+    .math-expr {
+      font-family: "Courier New", Courier, monospace;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <h1>Tes Diagnostik Matematika</h1>
+    <p class="subtitle">Materi: Fungsi Kuadrat (Kelas X)</p>
+  </header>
+
+  <!-- Halaman Awal -->
+  <div id="card-start" class="card active">
+    <p style="margin-bottom: 16px; line-height: 1.5; font-size: 0.95rem;">
+      Halo! Tes singkat ini bertujuan untuk mengukur pemahaman awal kamu mengenai materi <strong>Fungsi Kuadrat</strong> agar kamu mendapatkan jalur belajar yang paling sesuai.
+    </p>
+    <p style="margin-bottom: 20px; font-size: 0.85rem; color: var(--text-light);">
+      Prasyarat: Menentukan koefisien $a, b, c$ dan Faktorisasi Persamaan Kuadrat.
+    </p>
+    <button class="btn" onclick="startTest()">Mulai Tes Diagnostik</button>
+  </div>
+
+  <!-- Halaman Soal Diagnostik -->
+  <div id="card-quiz" class="card">
+    <div class="progress-bar">
+      <div id="progress-fill" class="progress-fill"></div>
+    </div>
+    <p id="question-number" style="font-size: 0.8rem; color: var(--text-light); margin-bottom: 6px;"></p>
+    <div id="question-text" class="question-text"></div>
+    <div id="options" class="options"></div>
+  </div>
+
+  <!-- Halaman Hasil & Cabang Pembelajaran -->
+  <div id="card-branch" class="card">
+    <div id="branch-header"></div>
+    <div id="misconception-feedback"></div>
+    
+    <div id="branch-content" style="margin-bottom: 20px;"></div>
+
+    <h3 style="font-size: 1rem; margin-bottom: 12px;">Latihan Pemahaman:</h3>
+    <div id="practice-container"></div>
+
+    <div class="result-code-box" id="result-code"></div>
+
+    <button class="btn" style="margin-top: 10px;" onclick="resetTest()">Cek Ulang Tes Diagnostik</button>
+  </div>
+</div>
+
+<script>
+/**
+ * =================================================================
+ * DATA SOAL, MISKONSEPSI, DAN ATURAN CABANG (DAPAT DIUBAH DENGAN MUDAH)
+ * =================================================================
+ */
+const DIAGNOSTIC_DATA = {
+  // Master data miskonsepsi untuk umpan balik spesifik
+  misconceptions: {
+    M1: "Hati-hati saat menentukan nilai $b$ dan $c$! Pastikan kamu memperhatikan tanda positif/negatif di depan suku dan menyusun persamaan ke bentuk umum $ax^2 + bx + c = 0$ lebih dulu.",
+    M2: "Saat memfaktorkan $x^2 + bx + c = (x+p)(x+q)$, ingat aturan tanda: jika nilai $c$ negatif, maka salah satu dari $p$ atau $q$ harus bernilai negatif.",
+    M3: "Ingat kembali bahwa $a$ adalah angka di depan $x^2$, $b$ di depan $x$, dan $c$ adalah konstanta tanpa variabel $x$. Jangan tertukar posisinya ya!",
+    M4: "Akar-akar dari persamaan $(x-p)(x-q) = 0$ adalah $x = p$ atau $x = q$. Jangan lupa membalik tanda saat menentukan nilai $x$ dari bentuk faktornya."
+  },
+
+  // 3 Soal Pilihan Ganda Diagnostik
+  questions: [
+    {
+      id: 1,
+      text: "Diberikan bentuk kuadrat $f(x) = 5 - 3x - 2x^2$. Nilai koefisien $a$, $b$, dan $c$ berturut-turut adalah...",
+      options: [
+        { text: "a = 5, b = -3, c = -2", isCorrect: false, code: "M3" },
+        { text: "a = -2, b = -3, c = 5", isCorrect: true, code: "CORRECT" },
+        { text: "a = 2, b = 3, c = 5", isCorrect: false, code: "M1" },
+        { text: "a = -2, b = 3, c = -5", isCorrect: false, code: "M1" }
+      ]
+    },
+    {
+      id: 2,
+      text: "Bentuk pemfaktoran yang benar dari persamaan $x^2 - 2x - 8 = 0$ adalah...",
+      options: [
+        { text: "(x - 4)(x + 2)", isCorrect: true, code: "CORRECT" },
+        { text: "(x + 4)(x - 2)", isCorrect: false, code: "M2" },
+        { text: "(x - 4)(x - 2)", isCorrect: false, code: "M2" },
+        { text: "(x + 4)(x + 2)", isCorrect: false, code: "M2" }
+      ]
+    },
+    {
+      id: 3,
+      text: "Jika suatu fungsi kuadrat memiliki bentuk terkondisi $(x - 5)(x + 1) = 0$, maka titik potong grafik terhadap sumbu-x terjadi pada...",
+      options: [
+        { text: "x = -5 dan x = 1", isCorrect: false, code: "M4" },
+        { text: "x = 5 dan x = -1", isCorrect: true, code: "CORRECT" },
+        { text: "x = 5 dan x = 1", isCorrect: false, code: "M4" },
+        { text: "x = -5 dan x = -1", isCorrect: false, code: "M4" }
+      ]
+    }
+  ],
+
+  // Konten Pembelajaran & Latihan per Cabang
+  branches: {
+    A: {
+      title: "Cabang A: Penguatan Prasyarat",
+      badgeClass: "badge-a",
+      explanation: "<strong>Penguatan Dasar:</strong> Bentuk umum fungsi kuadrat adalah $f(x) = ax^2 + bx + c$. Koefisien $a$ melekat pada $x^2$, $b$ pada $x$, dan $c$ adalah konstanta. Untuk memfaktorkan $x^2 + bx + c$, cari dua angka yang jika dikalikan menghasilkan $c$ dan jika dijumlahkan menghasilkan $b$.",
+      practices: [
+        {
+          id: "pA1",
+          question: "Tentukan nilai koefisien $b$ dari $f(x) = x^2 - 7x + 10$.",
+          options: ["7", "-7", "10"],
+          answer: "-7",
+          feedbackCorrect: "Tepat sekali! Koefisien b di depan x adalah -7.",
+          feedbackWrong: "Kurang tepat. Perhatikan tanda negatif di depan angka 7."
+        },
+        {
+          id: "pA2",
+          question: "Hasil pemfaktoran dari $x^2 - 9 = 0$ adalah...",
+          options: ["(x - 3)(x - 3)", "(x - 3)(x + 3)", "(x + 9)(x - 1)"],
+          answer: "(x - 3)(x + 3)",
+          feedbackCorrect: "Hebat! Ini adalah bentuk selisih dua kuadrat.",
+          feedbackWrong: "Ingat bentuk selisih kuadrat $a^2 - b^2 = (a-b)(a+b)$."
+        }
+      ]
+    },
+    B: {
+      title: "Cabang B: Pembelajaran Reguler",
+      badgeClass: "badge-b",
+      explanation: "<strong>Konsep Utama:</strong> Titik potong sumbu-x dicari dengan menyamakan $f(x) = 0$ (mencari akar-akar). Nilai koefisien $a$ menentukan arah bukaan kurva parabola: jika $a > 0$ kurva terbuka ke atas (senyum), dan jika $a < 0$ kurva terbuka ke bawah (cemberut).",
+      practices: [
+        {
+          id: "pB1",
+          question: "Grafik fungsi $f(x) = -x^2 + 4x + 5$ terbuka ke...",
+          options: ["Atas", "Bawah", "Samping"],
+          answer: "Bawah",
+          feedbackCorrect: "Benar! Karena nilai a = -1 (a < 0), kurva terbuka ke bawah.",
+          feedbackWrong: "Perhatikan nilai a = -1. Jika a negatif, kurva terbuka ke mana?"
+        },
+        {
+          id: "pB2",
+          question: "Titik potong sumbu-x dari $f(x) = x^2 - 3x$ adalah...",
+          options: ["x = 0 dan x = 3", "x = 0 dan x = -3", "x = 3 dan x = -3"],
+          answer: "x = 0 dan x = 3",
+          feedbackCorrect: "Tepat! Bentuk $x(x - 3) = 0$ memberikan nilai x = 0 atau x = 3.",
+          feedbackWrong: "Faktorkan menjadi $x(x - 3) = 0$, lalu tentukan pembuat nolnya."
+        }
+      ]
+    },
+    C: {
+      title: "Cabang C: Pengayaan & Analisis Terapan",
+      badgeClass: "badge-c",
+      explanation: "<strong>Pengayaan:</strong> Karakteristik grafik fungsi kuadrat ditentukan oleh nilai Diskriminan ($D = b^2 - 4ac$). Jika $D > 0$ grafik memotong sumbu-x di dua titik, $D = 0$ menyinggung sumbu-x di satu titik, dan $D < 0$ tidak memotong sumbu-x.",
+      practices: [
+        {
+          id: "pC1",
+          question: "Berapa jumlah titik potong sumbu-x untuk $f(x) = x^2 - 4x + 4$?",
+          options: ["2 titik berbeda", "1 titik (menyinggung)", "Tidak memotong sumbu-x"],
+          answer: "1 titik (menyinggung)",
+          feedbackCorrect: "Luar biasa! Nilai D = (-4)^2 - 4(1)(4) = 0, sehingga menyinggung di 1 titik.",
+          feedbackWrong: "Coba hitung nilai Diskriminannya ($D = b^2 - 4ac$). Hasilnya adalah 0."
+        },
+        {
+          id: "pC2",
+          question: "Sumbu simetri dari $f(x) = 2x^2 - 8x + 6$ terletak pada garis...",
+          options: ["x = 2", "x = -2", "x = 4"],
+          answer: "x = 2",
+          feedbackCorrect: "Benar! Menggunakan rumus sumbu simetri $x = -b / (2a) = -(-8)/(2*2) = 2$.",
+          feedbackWrong: "Gunakan rumus sumbu simetri $x = -b / (2a)$."
+        }
+      ]
+    }
+  }
+};
+
+/**
+ * =================================================================
+ * STATE APLIKASI
+ * =================================================================
+ */
+let currentQuestionIndex = 0;
+let userScore = 0;
+let detectedMisconceptions = [];
+let assignedBranch = "";
+
+/**
+ * =================================================================
+ * LOGIKA APLIKASI
+ * =================================================================
+ */
+
+// Memulai tes
+function startTest() {
+  currentQuestionIndex = 0;
+  userScore = 0;
+  detectedMisconceptions = [];
+  assignedBranch = "";
+  
+  showCard("card-quiz");
+  renderQuestion();
+}
+
+// Menampilkan card tertentu
+function showCard(cardId) {
+  document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+  document.getElementById(cardId).classList.add('active');
+}
+
+// Menampilkan soal saat ini
+function renderQuestion() {
+  const q = DIAGNOSTIC_DATA.questions[currentQuestionIndex];
+  const totalQ = DIAGNOSTIC_DATA.questions.length;
+
+  // Update Progress Bar
+  const progressPercent = ((currentQuestionIndex) / totalQ) * 100;
+  document.getElementById('progress-fill').style.width = progressPercent + '%';
+
+  document.getElementById('question-number').innerText = `Soal ${currentQuestionIndex + 1} dari ${totalQ}`;
+  document.getElementById('question-text').innerHTML = q.text;
+
+  const optionsContainer = document.getElementById('options');
+  optionsContainer.innerHTML = '';
+
+  // Acak opsi jawaban secara opsional atau tampilkan langsung
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = opt.text;
+    btn.onclick = () => handleAnswer(opt);
+    optionsContainer.appendChild(btn);
+  });
+}
+
+// Memproses jawaban siswa
+function handleAnswer(selectedOption) {
+  if (selectedOption.isCorrect) {
+    userScore++;
+  } else {
+    if (selectedOption.code && !detectedMisconceptions.includes(selectedOption.code)) {
+      detectedMisconceptions.push(selectedOption.code);
+    }
+  }
+
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex < DIAGNOSTIC_DATA.questions.length) {
+    renderQuestion();
+  } else {
+    finishDiagnostic();
+  }
+}
+
+// Menyelesaikan tes diagnostik dan menentukan cabang
+function finishDiagnostic() {
+  // Aturan Cabang: Skor 0-1 -> A, Skor 2 -> B, Skor 3 -> C
+  if (userScore <= 1) {
+    assignedBranch = "A";
+  } else if (userScore === 2) {
+    assignedBranch = "B";
+  } else {
+    assignedBranch = "C";
+  }
+
+  renderBranchScreen();
+  showCard("card-branch");
+}
+
+// Menampilkan layar cabang beserta umpan balik
+function renderBranchScreen() {
+  const branchData = DIAGNOSTIC_DATA.branches[assignedBranch];
+
+  // Render Header Cabang
+  document.getElementById('branch-header').innerHTML = `
+    <span class="badge ${branchData.badgeClass}">${branchData.title}</span>
+    <h2 style="font-size: 1.1rem; margin-bottom: 12px;">Skor Kamu: ${userScore} / 3</h2>
+  `;
+
+  // Render Umpan Balik Miskonsepsi jika ada
+  const miscContainer = document.getElementById('misconception-feedback');
+  miscContainer.innerHTML = '';
+  
+  if (detectedMisconceptions.length > 0) {
+    let miscText = "<strong>Catatan Evaluasi Diagnostik:</strong><br>";
+    detectedMisconceptions.forEach(code => {
+      if (DIAGNOSTIC_DATA.misconceptions[code]) {
+        miscText += `• ${DIAGNOSTIC_DATA.misconceptions[code]}<br>`;
+      }
+    });
+    miscContainer.innerHTML = `<div class="misconception-box">${miscText}</div>`;
+  }
+
+  // Render Materi Singkat
+  document.getElementById('branch-content').innerHTML = `
+    <p style="font-size: 0.95rem; line-height: 1.5; color: var(--text);">${branchData.explanation}</p>
+  `;
+
+  // Render Latihan Soal Interaktif
+  const practiceContainer = document.getElementById('practice-container');
+  practiceContainer.innerHTML = '';
+
+  branchData.practices.forEach((practice, index) => {
+    const pBox = document.createElement('div');
+    pBox.className = 'practice-box';
+    
+    let optionsHTML = practice.options.map(opt => `
+      <button class="option-btn" style="padding: 8px 12px; margin-top: 6px; width: 100%; font-size: 0.9rem;" 
+              onclick="checkPractice('${practice.id}', '${opt}', '${practice.answer}', 'fb-${practice.id}')">
+        ${opt}
+      </button>
+    `).join('');
+
+    pBox.innerHTML = `
+      <p>Latihan ${index + 1}: ${practice.question}</p>
+      <div>${optionsHTML}</div>
+      <div id="fb-${practice.id}" class="practice-feedback"></div>
+    `;
+    practiceContainer.appendChild(pBox);
+  });
+
+  // Render Kode Hasil Format: KODE|CABANG|SKOR|M-yang-muncul
+  const miscCodeStr = detectedMisconceptions.length > 0 ? detectedMisconceptions.join('-') : 'NIHIL';
+  const resultCode = `DIAG|${assignedBranch}|${userScore}|${miscCodeStr}`;
+  document.getElementById('result-code').innerText = resultCode;
+}
+
+// Mengecek jawaban latihan instan di dalam cabang
+function checkPractice(practiceId, selected, correct, feedbackId) {
+  const fbDiv = document.getElementById(feedbackId);
+  const branchData = DIAGNOSTIC_DATA.branches[assignedBranch];
+  const practiceObj = branchData.practices.find(p => p.id === practiceId);
+
+  if (selected === correct) {
+    fbDiv.className = "practice-feedback feedback-correct";
+    fbDiv.innerText = practiceObj.feedbackCorrect;
+  } else {
+    fbDiv.className = "practice-feedback feedback-wrong";
+    fbDiv.innerText = practiceObj.feedbackWrong;
+  }
+}
+
+// Mengulang tes
+function resetTest() {
+  startTest();
+}
+</script>
+
+</body>
+</html>
